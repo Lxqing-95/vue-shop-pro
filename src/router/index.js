@@ -1,23 +1,42 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
+import Welcome from '@/components/Welcome'
 
 Vue.use(Router)
 
-export default new Router({
-  routes: [{
-    path: '/',
-    name: 'HelloWorld',
-    component: HelloWorld
-  }, {
+var router = new Router({
+  routes: [ {
     path: '/login',
-    name: 'login',
     component: Login
   }, {
     path: '/home',
-    name: 'home',
-    component: Home
+    component: Home,
+    redirect: '/welcome',
+    children: [
+      {
+        path: '/welcome',
+        component: Welcome
+      }
+    ]
   }]
 })
+
+// 给路由设置"导航守卫"
+// 在守卫中对 token 进行监听，有token就让执行，否则跳转到登录页去
+router.beforeEach((to, from, next) => {
+  // 请求'login'就直接通过
+  if (to.path === '/login') {
+    return next()
+  }
+  // 请求'非login'，就判断token
+  var token = window.sessionStorage.getItem('token')
+  if (!token) {
+    return next('./login')
+  }
+  // 请继续
+  next()
+})
+
+export default router

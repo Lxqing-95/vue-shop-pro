@@ -32,8 +32,8 @@ export default {
   data() {
     return {
       loginForm: {
-        username: '',
-        password: ''
+        username: 'admin',
+        password: '123456'
       },
       loginFormRules: {
         username: [
@@ -57,9 +57,9 @@ export default {
             return this.$message.error('用户名或密码不存在')
           }
           // 通过浏览器的sessionStorage记录服务器返回的taken信息
-          window.sessionStorage.setItem('token',res.data.token)
+          window.sessionStorage.setItem('token', res.data.token)
           //   页面重定向到后台首页
-          // this.$router.push('/home')
+          this.$router.push('/home')
         }
       })
     },
